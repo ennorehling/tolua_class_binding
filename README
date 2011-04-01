@@ -1,4 +1,4 @@
-I was neer a fan of luabind, because it meant having to add C++ to my C
+I was never a fan of luabind, because it meant having to add C++ to my C
 projects. Binding code by hand is a chore, and tolua++ looked promising.
 There were two caveats:
 
