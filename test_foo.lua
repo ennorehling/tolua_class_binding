@@ -9,7 +9,15 @@ function test_assign()
     assert_equal(42, a.value)
 end    
 
+function test_nonmembers()
+    local a = foo.bar()
+    assert_equal(nil, a.baz)
+    a.baz = "Hello"
+    assert_equal("Hello", a.baz)
+end
+
 function test_foo()
+    collectgarbage()
     local a = foo.bar()
     assert_not_equal(nil, a)
     local b = foo.bar()
