@@ -1,0 +1,50 @@
+$#include "bar.h"
+
+$[
+  function wrap_garbage_collector(userdata, gc)
+      local mt = getmetatable(userdata)
+      local old_gc = mt.__gc
+      function mt.__gc (data)
+          gc(data)
+          old_gc(data)
+      end
+  end
+
+  function build_class(cons, gc)
+      local is_wrapped = false
+      function class ()
+          -- Call the constructor.
+          local value = cons()
+
+          -- Adjust the garbage collector of the class (once only).
+          if not is_wrapped then
+              wrap_garbage_collector(value, gc)
+              is_wrapped = true
+          end
+          return value
+      end
+      return class
+  end
+$]
+
+module foo {
+  struct bar {
+    tolua_readonly int m @ value;
+    tolua_outside void bar_hello @ hello();
+  };
+  
+};
+
+bar * bar_new(void);
+void bar_free(bar *);
+$[
+
+  -- The Lua module that contains our classes.
+  foo = foo or {}
+
+  -- Build and assign the classes.
+  foo.bar = build_class(bar_new, bar_free)
+  bar_new = nil
+  bar_free = nil
+$]
+

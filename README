@@ -1,0 +1,22 @@
+I was neer a fan of luabind, because it meant having to add C++ to my C
+projects. Binding code by hand is a chore, and tolua++ looked promising.
+There were two caveats:
+
+* the C headers (.h) are usually not in a format that is easy for binding
+* I wanted a class interface, not just modules of functions
+
+Here is a minimal example of a class bar implemented in C that has the
+following Lua usage:
+
+ require "foo" -- shared library
+ b = foo.bar() -- constructor for a C struct bar
+ print(b.value) -- print the member variable m in the C struct
+ print(b:hello()) -- call a member function
+ b = nil -- garbage collection will eventually collect b now
+
+The necessary definition is in foo.pkg, and to build it, cmake, Lua 5.1 and
+tolua are required.
+
+I would like to thank the user antonakos on Stack Overflow for getting me
+through the hardest part of this work when I was stuck.
+http://stackoverflow.com/questions/4999773/binding-structs-and-ctor-dtor-with-tolua
